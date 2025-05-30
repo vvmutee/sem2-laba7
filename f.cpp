@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 class BoolVector {
 private:
     char* data;
@@ -118,6 +117,27 @@ public:
         }
         std::cout << "]" << std::endl;
     }
+    
+    friend std::ostream& operator << (std::ostream& os, const BoolVector& v)
+    {
+        os << "Bits (" << v.bits << "): [ ";
+        for (size_t i = 0; i < v.bits; ++i) {
+            // Получаем значение бита
+            size_t byte_idx = i / 8;
+            size_t bit_idx = i % 8;
+            bool bit_value = (v.data[byte_idx] >> bit_idx) & 1;
+
+            // Выводим бит (1 или 0)
+            os << bit_value << " ";
+
+            // Добавляем разделитель каждые 8 бит для удобства чтения
+            if ((i + 1) % 8 == 0 && (i + 1) != v.bits) {
+                os << "| ";
+            }
+        }
+        os << "]" << std::endl;
+        return os;
+    }
 };
 
 int main() {
@@ -141,7 +161,7 @@ int main() {
     a.print();
 
     a.push_back(1);
-    a.print();
+    std::cout << a;
 
     for (int i = 0; i < 8; i++) a.push_back(1);
     a.print();
